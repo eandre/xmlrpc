@@ -71,6 +71,7 @@ func (dec *decoder) decodeValue(val reflect.Value) error {
 	var tok xml.Token
 	var err error
 
+	rawVal := val
 	if val.Kind() == reflect.Ptr {
 		if val.IsNil() {
 			val.Set(reflect.New(val.Type().Elem()))
@@ -370,6 +371,9 @@ func (dec *decoder) decodeValue(val reflect.Value) error {
 
 				val.SetFloat(i)
 			}
+		case "nil":
+			rawVal.Set(reflect.Zero(rawVal.Type()))
+
 		default:
 			return errors.New("unsupported type")
 		}
